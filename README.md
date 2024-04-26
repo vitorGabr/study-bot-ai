@@ -46,8 +46,6 @@ Este comando irá iniciar a aplicação e você estará pronto para começar a u
 
 Este projeto é um BOT para o Discord, o que significa que ele interage diretamente com servidores Discord para facilitar o envio e a organização de fotos de aulas e resumos de conteúdo.
 
-![Discord](https://upload.wikimedia.org/wikipedia/pt/thumb/8/8d/Discord_logo_hires.png/240px-Discord_logo_hires.png)
-
 ## 🤝 Contribuição
 
 Contribuições são bem-vindas! Para maiores detalhes sobre como contribuir para o projeto, veja nosso [Guia de Contribuição](CONTRIBUTING.md).
