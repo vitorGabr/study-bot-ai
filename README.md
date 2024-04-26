@@ -25,19 +25,19 @@ Ao automatizar o processo de resumo e organização de imagens com o uso de IA, 
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/seu-projeto.git
+   git clone https://github.com/vitorGabr/study-bot-ia.git
    ```
 
-2. Instale as dependências usando [pnpm](https://pnpm.io/):
+2. Instale as dependências usando [bun](https://bun.sh/):
    ```bash
-   pnpm install
+   bun install
    ```
 
 ## ▶️ Uso
 
 Para iniciar a aplicação, execute:
 ```bash
-pnpm dev
+bun dev
 ```
 
 Este comando irá iniciar a aplicação e você estará pronto para começar a usar! Certifique-se de configurar as variáveis de ambiente conforme necessário antes de iniciar a aplicação.
