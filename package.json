@@ -1,0 +1,22 @@
+{
+  "name": "study",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun src/index.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.7.1",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.8.0",
+    "dayjs": "^1.11.10",
+    "discord.js": "^14.14.1",
+    "valibot": "^0.30.0"
+  }
+}
