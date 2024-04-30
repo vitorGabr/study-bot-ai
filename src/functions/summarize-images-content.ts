@@ -1,10 +1,10 @@
 import { parse } from "valibot";
-import { CHANNELS } from "../constants/channels";
-import { genAI } from "../lib/ai";
+import { CHANNELS } from "../settings/constants/channels";
+import { geminiAI } from "../settings/ia/gemini";
 import {
     ResponseContentSchema,
     type ResponseContent,
-} from "../structs/image-content";
+} from "../settings/schemas/image-content";
 
 /**
  * Gera conteúdo detalhado para imagens fornecidas.
@@ -12,7 +12,7 @@ import {
  * @returns {Promise<ResponseContent>} - Objeto contendo o conteúdo gerado para cada imagem.
  */
 export async function summarizeImagesContent(images: string[]): Promise<ResponseContent> {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+    const model = geminiAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
     const prompt = `
         "Objetivo": "Identificar com precisão a matéria e gerar conteúdo detalhado para imagens fornecidas.",

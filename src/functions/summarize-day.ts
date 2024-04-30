@@ -1,5 +1,5 @@
-import { genAI } from "../lib/ai";
-import type { ImageContent } from "../structs/image-content";
+import { geminiAI } from "../settings/ia/gemini";
+import type { ImageContent } from "../settings/schemas/image-content";
 
 /**
  * Gera uma aula com base em resumos de conteúdo de imagens.
@@ -7,7 +7,7 @@ import type { ImageContent } from "../structs/image-content";
  * @returns {Promise<{ content: ImageContent[], text: string }>} - Objeto contendo o conteúdo das imagens e o texto gerado da aula.
  */
 export async function summarizeDay(data: ImageContent[]) {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = geminiAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
         "Objetivo: Dado vários resumos de conteúdo de uma matéria, gerar um resumo da aula no dia.",
