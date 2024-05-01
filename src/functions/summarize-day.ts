@@ -1,29 +1,27 @@
-import { geminiAI } from "../settings/ia/gemini";
-import type { ImageContent } from "../settings/schemas/image-content";
+import type { GenerativeIa } from "../structs/types/generative-ia";
 
-/**
- * Gera uma aula com base em resumos de conteúdo de imagens.
- * @param {ImageContent[]} data - Array de objetos ImageContent contendo resumos de conteúdo de imagens.
- * @returns {Promise<{ content: ImageContent[], text: string }>} - Objeto contendo o conteúdo das imagens e o texto gerado da aula.
- */
-export async function summarizeDay(data: ImageContent[]) {
-    const model = geminiAI.getGenerativeModel({ model: "gemini-pro" });
+export class SumarizeDay {
+	constructor(private ia: GenerativeIa) {}
 
-    const prompt = `
-        "Objetivo: Dado vários resumos de conteúdo de uma matéria, gerar um resumo da aula no dia.",
-        "Dados: Os resumos disponíveis são: ${data.map(({ content }) => content).join(", ")}.",
-        "Resposta: Retorne em formato de texto.",
-        "Atenção: [
-            "- A resposta tem que começar assim 'A aula de hoje foi sobre: '",
-            "- Utilize conhecimento adicional relacionado ao tema para enriquecer o resumo, mantendo a precisão e a relevância."
-        ]
-    `;
-    
-    const result = await model.generateContent([prompt]);
-    const response = await result.response;
-    
-    return {
-        content: data,
-        text: response.text()
-    };
+	async execute(contents: string[]) {
+		const model = this.ia.createModel("gemini-pro");
+		const prompt = `
+			"Objetivo: Dado vários resumos de conteúdo de uma matéria, gerar um resumo da aula no dia.",
+			"Dados: Os resumos disponíveis são: ${contents.join(", ")}.",
+			"Resposta: Retorne em formato de texto.",
+			"Atenção: [
+				"- A resposta tem que começar assim 'A aula de hoje foi sobre: {COLOCAR MATERIA AQUI}'",
+				"- Corpo da aula deve conter um resumo resumo da aula no dia.",
+				"- O resumo deve ser fiel ao conteúdo fornecido. Evite adicionar informações não presentes nos resumos.",
+				"- O resumo deve ser curto e objetivo, refletindo o conteúdo fornecido.",
+			]
+		`;
+		const response = await model.generateContent([
+			{
+				content: prompt,
+				type: "text",
+			},
+		]);
+		return response;
+	}
 }
