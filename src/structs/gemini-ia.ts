@@ -1,9 +1,14 @@
-import { type GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
+import {
+	type GenerativeModel,
+	GoogleGenerativeAI,
+} from "@google/generative-ai";
 import type { ContentProps, GenerativeIa } from "./types/generative-ia";
 
 export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
+	readonly name = "Gemini";
+
 	constructor() {
-		super(`${process.env.GOOGLE_API_KEY}`)
+		super(`${process.env.GOOGLE_API_KEY}`);
 	}
 
 	createModel(model: string) {

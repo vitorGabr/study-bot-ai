@@ -4,6 +4,7 @@ export type ContentProps = {
 }[];
 
 export interface GenerativeIa {
+    name: string;
     createModel: (model:string) => {
         generateContent: (props: ContentProps) => Promise<string>;
     };
