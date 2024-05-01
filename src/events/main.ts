@@ -13,18 +13,12 @@ export default new Event({
 	name: "messageCreate",
 	run: async (message) => {
 		const { author, attachments, guild } = message;
+
+		if (attachments.size <= 0 || author.bot) return;
+
 		const images = attachments.map((attachment) => attachment.url);
-
-		if (author.bot) return;
-		if (images.length === 0) return;
-
 		const contents = await new SummarizeImagesContent(ia).execute(images);
 
-		if (contents.length === 0) {
-			await message.reply(ERRORS.NO_IMAGE_FOUND);
-			return;
-		}
-		
 		for (const item of contents) {
 			const { subject, content } = item;
 			const contentsText = content.map((c) => c.content)

@@ -20,7 +20,7 @@ export class SummarizeImagesContent {
 		const weekDay = dayjs().subtract(1, "day").day();
 		const model = this.ia.createModel("gemini-pro-vision");
 		const channels = CHANNELS.filter((channel) =>
-			channel.classDays.includes(weekDay),
+			channel.classDays?.includes(weekDay),
 		)
 			.map((channel) => channel.name)
 			.join(", ");
@@ -39,7 +39,8 @@ export class SummarizeImagesContent {
                 "- Deve ser gerado um resumo para cada imagem fornecida, com a matéria identificada e o conteúdo detalhado correspondente."
                 "- Não pode haver erros na identificação da matéria ou no conteúdo gerado."
                 "- Matérias que não estejam na lista fornecida serão consideradas inválidas."
-            ]
+				"- Se a imagem não corresponder a nenhuma matéria, utilizar o nome 'Outros' para a matéria identificada, e continuar com a estrutura definida."
+			]
         `;
 
 		const imagesData = images.map((image) => ({

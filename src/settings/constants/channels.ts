@@ -2,7 +2,7 @@ type ChannelProps = {
 	id: string;
 	name: string;
 	tag: string;
-	classDays: number[];
+	classDays?: number[];
 };
 
 export const CHANNELS = [
@@ -35,5 +35,9 @@ export const CHANNELS = [
 		name: "Arquitetura de Redes de Computador",
 		tag: "arquitetura-de-redes-de-computador",
 		classDays: [3],
+	},
+	{
+		name: "Outros",
+		tag: "outros",
 	}
 ] as ChannelProps[];
