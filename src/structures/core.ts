@@ -10,6 +10,7 @@ import {
 import type { EventType } from "./event";
 
 export class Core extends Client {
+
 	constructor() {
 		super({
 			intents: Object.keys(IntentsBitField.Flags) as BitFieldResolvable<GatewayIntentsString, number>,
