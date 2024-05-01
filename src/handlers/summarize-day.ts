@@ -1,4 +1,4 @@
-import type { GenerativeIa } from "../structs/types/generative-ia";
+import type { GenerativeIa } from "../interfaces/generative-ia";
 
 export class SumarizeDay {
 	constructor(private ia: GenerativeIa) {}

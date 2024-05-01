@@ -1,10 +1,7 @@
-import { ExtendClient } from "./structs/extended-client";
+import { Core } from "./structures/core";
 
-const client = new ExtendClient();
-
+const client = new Core();
 client.start();
 
-client.on("ready", () => {
-    console.log(`Logged in as ${client.user?.tag}`);
-});
+
 export { client }

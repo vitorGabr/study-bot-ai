@@ -7,9 +7,9 @@ import {
 	type ClientEvents,
 	type GatewayIntentsString,
 } from "discord.js";
-import type { EventType } from "./types/event";
+import type { EventType } from "./event";
 
-export class ExtendClient extends Client {
+export class Core extends Client {
 	constructor() {
 		super({
 			intents: Object.keys(IntentsBitField.Flags) as BitFieldResolvable<GatewayIntentsString, number>,

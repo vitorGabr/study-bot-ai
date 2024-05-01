@@ -2,7 +2,7 @@ import {
 	type GenerativeModel,
 	GoogleGenerativeAI,
 } from "@google/generative-ai";
-import type { ContentProps, GenerativeIa } from "./types/generative-ia";
+import type { GenerativeIa, ContentProps } from "../interfaces/generative-ia";
 
 export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 	readonly name = "Gemini";

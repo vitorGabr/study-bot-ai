@@ -1,6 +1,6 @@
 import { array, object, optional, parse, string } from "valibot";
 import { CHANNELS } from "../settings/constants/channels";
-import type { GenerativeIa } from "../structs/types/generative-ia";
+import type { GenerativeIa } from "../interfaces/generative-ia";
 import dayjs from "dayjs";
 
 const responseSchema = object({

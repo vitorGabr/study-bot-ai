@@ -1,25 +1,22 @@
 import { ChannelType, EmbedBuilder } from "discord.js";
 import { CHANNELS } from "../settings/constants/channels";
 import { ERRORS } from "../settings/constants/errors";
-import { SumarizeDay } from "../functions/summarize-day";
-import { SummarizeImagesContent } from "../functions/summarize-images-content";
+import { SumarizeDay } from "../handlers/summarize-day";
+import { SummarizeImagesContent } from "../handlers/summarize-images-content";
 import dayjs from "dayjs";
-import { Event } from "../structs/types/event";
-import { GeminiIa } from "../structs/gemini-ia";
+import { GeminiIa } from "../structures/gemini";
+import { Event } from "../structures/event";
 
 const ia = new GeminiIa();
 
 export default new Event({
 	name: "messageCreate",
 	run: async (message) => {
-		const { author, attachments, channel, guild } = message;
-		if (author.bot) return;
+		const { author, attachments, guild } = message;
 		const images = attachments.map((attachment) => attachment.url);
-		if (images.length === 0) {
-			console.error(ERRORS.NO_IMAGE_FOUND);
-			return;
-		}
-		await channel.sendTyping();
+
+		if (author.bot) return;
+		if (images.length === 0) return;
 
 		const contents = await new SummarizeImagesContent(ia).execute(images);
 
@@ -27,8 +24,10 @@ export default new Event({
 			await message.reply(ERRORS.NO_IMAGE_FOUND);
 			return;
 		}
+		
 		for (const item of contents) {
 			const { subject, content } = item;
+			const contentsText = content.map((c) => c.content)
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
 			const channel = guild?.channels.cache.find(
 				(channel) => channel.name === channelInfo?.tag,
@@ -41,20 +40,16 @@ export default new Event({
 				continue;
 			}
 
-			const generatedClass = await new SumarizeDay(ia).execute(
-				content.map((c) => c.content),
-			);
+			const generatedClass = await new SumarizeDay(ia).execute(contentsText);
 
 			if (channel?.type === ChannelType.GuildText) {
-				const date = dayjs().subtract(1, "day");
-				const formatedDate = date.format("DD/MM/YYYY");
-				const randomColor = Math.floor(Math.random() * 16777215);
+				const date = dayjs().subtract(1, "day").format("DD/MM/YYYY");
 
 				const embed = new EmbedBuilder()
-					.setTitle(`Aula gerada do dia ${formatedDate}`)
+					.setTitle(`Aula gerada do dia ${date}`)
 					.setDescription(generatedClass)
 					.setTimestamp()
-					.setColor(randomColor)
+					.setColor('Random')
 					.setFooter({
 						text: `Gerado por ${ia.name}`,
 					});
