@@ -1,55 +1,43 @@
-# 🖼️ Projeto de Resumo de Conteúdo de Imagens 🤖
+🤖 **Bot de Identificação e Resumo de Imagens para Discord**
 
-Este projeto visa simplificar o processo de organização e resumo de conteúdo de imagens de aulas utilizando Inteligência Artificial (IA). A ideia surgiu da necessidade de lidar com a grande quantidade de fotos tiradas durante as aulas da faculdade, resultando em uma galeria desorganizada e dificuldade para revisar o material posteriormente.
+Este é um bot para o Discord que automatiza o processo de identificação e resumo de imagens enviadas para um canal específico. O objetivo principal é organizar imagens por matéria e gerar um resumo do conteúdo nelas contido.
 
-## 💡 Motivação
+---
 
-Na faculdade, é comum tirar fotos de slides, quadros ou notas durante as aulas para revisão posterior. No entanto, essa prática pode levar a uma galeria de fotos desorganizada e tornar difícil encontrar o material necessário quando necessário. Além disso, revisar grandes quantidades de imagens pode ser demorado e cansativo.
+## 🚀 Funcionalidades Principais
 
-Ao automatizar o processo de resumo e organização de imagens com o uso de IA, o objetivo é facilitar a revisão do material de estudo e economizar tempo para os estudantes. O uso de um bot para enviar as fotos das aulas e receber resumos detalhados diretamente nos canais de matérias no Discord proporciona uma maneira eficiente de manter o material de estudo organizado e acessível.
+- **Identificação de Imagens:** O bot usa inteligência artificial para identificar o conteúdo das imagens enviadas ao canal.
+  
+- **Classificação por Matéria:** Após a identificação, o bot classifica as imagens por matéria, com base em palavras-chave pré-definidas ou padrões de texto.
+  
+- **Geração de Resumos:** Para cada matéria, o bot cria um resumo do conteúdo das imagens enviadas, utilizando novamente inteligência artificial para compilar as informações relevantes.
+  
+- **Envio Automático:** Os resumos gerados são enviados para o canal correspondente da matéria, facilitando o acesso e a organização das informações.
 
-## 🛠️ Funcionalidades
+---
 
-- Envio automático de fotos das aulas para o bot.
-- Identificação precisa da matéria das imagens utilizando IA.
-- Geração de resumos detalhados para cada imagem com o auxílio de IA.
-- Envio dos resumos para os canais respectivos das matérias no Discord.
+## 🌟 Motivação
 
-## 🌱 Contras
+Este projeto nasceu da necessidade de organizar imagens de estudos e aulas que ficavam dispersas em dispositivos móveis. A falta de organização dificultava a revisão do conteúdo e o acompanhamento do progresso acadêmico. O bot foi desenvolvido para simplificar esse processo, automatizando a identificação, classificação e resumo das imagens.
 
-- Requer conexão com a internet para utilizar a IA.
-- Dependendo da qualidade das fotos, a identificação das matérias pode não ser precisa.
-- A geração de resumos pode não ser 100% precisa e requer revisão humana para garantir a qualidade.
+---
 
-## 🚀 Instalação
+## 🛠️ Como Usar
 
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/vitorGabr/study-bot-ia.git
-   ```
+1. **Configuração do Bot:** Configure o bot com permissões necessárias para acessar o canal desejado e executar as operações de identificação e envio.
+   
+2. **Envio de Imagens:** Envie as imagens para o canal específico designado para o bot. Certifique-se de que as imagens sejam legíveis e relevantes para o conteúdo acadêmico.
 
-2. Instale as dependências usando [bun](https://bun.sh/):
-   ```bash
-   bun install
-   ```
+3. **Recepção de Resumos:** Após o processamento das imagens, o bot enviará automaticamente os resumos para os canais correspondentes das matérias.
 
-## ▶️ Uso
+---
 
-Para iniciar a aplicação, execute:
-```bash
-bun dev
-```
+## 🤝 Contribuições
 
-Este comando irá iniciar a aplicação e você estará pronto para começar a usar! Certifique-se de configurar as variáveis de ambiente conforme necessário antes de iniciar a aplicação.
+Contribuições são bem-vindas! Sinta-se à vontade para propor melhorias, reportar bugs ou colaborar no desenvolvimento do projeto. Consulte o arquivo CONTRIBUTING.md para obter mais informações sobre como contribuir.
 
-## 🤖 Uso no Discord
+---
 
-Este projeto é um BOT para o Discord, o que significa que ele interage diretamente com servidores Discord para facilitar o envio e a organização de fotos de aulas e resumos de conteúdo.
+## 📄 Licença
 
-## 🤝 Contribuição
-
-Contribuições são bem-vindas! Para maiores detalhes sobre como contribuir para o projeto, veja nosso [Guia de Contribuição](CONTRIBUTING.md).
-
-## 📝 Licença
-
-Este projeto está licenciado sob a Licença [MIT](LICENSE).
+Este projeto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT).
