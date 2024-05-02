@@ -1,4 +1,4 @@
-import { object, optional, picklist, union, type Output } from "valibot";
+import { picklist, union, type Output } from "valibot";
 
 export const anthropicModels = picklist(["claude-3-opus-20240229"]);
 export const geminiModels = picklist(["gemini-pro-vision","gemini-pro"]);
