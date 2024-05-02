@@ -2,7 +2,8 @@ import {
 	type GenerativeModel,
 	GoogleGenerativeAI,
 } from "@google/generative-ai";
-import type { GenerativeIa, ContentProps } from "../interfaces/generative-ia";
+import { type GenerativeIa, type ContentProps, type ModelsOptions, geminiModels } from "../../interfaces/generative-ia";
+import { parse } from "valibot";
 
 export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 	readonly name = "Gemini";
@@ -11,8 +12,9 @@ export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 		super(`${process.env.GOOGLE_API_KEY}`);
 	}
 
-	createModel(model: string) {
-		const clientModel = this.getGenerativeModel({ model });
+	createModel(options: ModelsOptions) {
+		const option = parse(geminiModels, options)
+		const clientModel = this.getGenerativeModel({ model: option });
 
 		return {
 			generateContent: (props: ContentProps) =>

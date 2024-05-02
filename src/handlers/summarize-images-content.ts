@@ -1,4 +1,4 @@
-import { array, object, optional, parse, string } from "valibot";
+import { ValiError, array, flatten, object, optional, parse, string } from "valibot";
 import { CHANNELS } from "../settings/constants/channels";
 import type { GenerativeIa } from "../interfaces/generative-ia";
 import dayjs from "dayjs";
@@ -18,7 +18,6 @@ export class SummarizeImagesContent {
 
 	async execute(images: string[]) {
 		const weekDay = dayjs().subtract(1, "day").day();
-		const model = this.ia.createModel("gemini-pro-vision");
 		const channels = CHANNELS.filter((channel) =>
 			channel.classDays?.includes(weekDay),
 		)
@@ -26,37 +25,59 @@ export class SummarizeImagesContent {
 			.join(", ");
 
 		const prompt = `
-            "Objetivo": "Identificar com precisão a matéria e gerar conteúdo detalhado para imagens fornecidas.",
-            "Dados": "As matérias disponíveis são: ${channels}.",
-            "Resposta": "Retorne em formato de texto: { "images": [{ "subject": string, "content": string }] }",
-            "Atenção": [
-                "- Certifique-se de que a identificação da matéria seja precisa e restrita às opções fornecidas nos 'Dados'.",
-                "- O conteúdo gerado deve ser detalhado, refletindo fielmente o que é apresentado na imagem e incluindo informações relevantes para a matéria identificada.",
-                "- Utilize conhecimento adicional relacionado ao tema para enriquecer o conteúdo, mantendo a precisão e a relevância.",
-                "- Evite generalizações ou informações não relacionadas ao tema específico identificado na imagem.",
-                "- Verifique cuidadosamente a correspondência entre a matéria identificada e o conteúdo gerado, garantindo que ambos estejam alinhados de forma precisa e clara.",
-                "- O nome da matéria deve ser uma dessas: [${channels}]. Qualquer outro nome será considerado inválido."
-                "- Deve ser gerado um resumo para cada imagem fornecida, com a matéria identificada e o conteúdo detalhado correspondente."
-                "- Não pode haver erros na identificação da matéria ou no conteúdo gerado."
-                "- Matérias que não estejam na lista fornecida serão consideradas inválidas."
-				"- Se a imagem não corresponder a nenhuma matéria, utilizar o nome 'Outros' para a matéria identificada, e continuar com a estrutura definida."
-			]
+			{
+				"Objetivo": "Identificar com precisão a matéria e gerar conteúdo detalhado para imagens fornecidas.",
+				"Dados": "As matérias disponíveis são: ${channels}.",
+				"Resposta": {
+					"type": "object",
+					"properties": {
+						"images": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"subject": {"type": "string"},
+									"content": {"type": "string"}
+								},
+								"required": ["subject", "content"]
+							}
+						}
+					},
+					"required": ["images"]
+				},
+				"Atenção": [
+					"- Garanta que a identificação da matéria seja precisa e restrita às opções fornecidas nos 'Dados'.",
+					"- O conteúdo gerado deve ser detalhado, fiel ao que é apresentado na imagem e incluir informações relevantes para a matéria identificada.",
+					"- Utilize conhecimento adicional relacionado ao tema para enriquecer o conteúdo, mantendo a precisão e relevância.",
+					"- Evite generalizações ou informações não pertinentes ao tema específico identificado na imagem.",
+					"- Verifique cuidadosamente a correspondência entre a matéria identificada e o conteúdo gerado, assegurando alinhamento preciso e clareza.",
+					"- O nome da matéria deve ser uma das opções fornecidas em '${channels}'. Outros nomes serão considerados inválidos.",
+					"- Deve ser gerado um resumo para cada imagem fornecida, com a matéria identificada e o conteúdo detalhado correspondente.",
+					"- Evite ambiguidades na identificação da matéria ou no conteúdo gerado.",
+					"- Processar cada imagem individualmente para evitar erros de associação entre matéria e conteúdo.",
+					"- Se a imagem não corresponder a nenhuma matéria, utilize o nome 'Outros' para a matéria identificada e mantenha a estrutura definida.",
+					"- Em casos de imagens com múltiplos temas ou assuntos, priorize a identificação do tema principal ou dominante, mantendo fidelidade às regras de precisão e relevância."
+				]
+			}
+		
         `;
 
-		const imagesData = images.map((image) => ({
-			content: image,
-			type: "url",
-		})) as { content: string; type: "url" }[];
-
-		const response = await model.generateContent([
-			{
-				content: prompt,
-				type: "text",
-			},
-			...imagesData,
-		]);
 
 		try {
+			const model = this.ia.createModel("gemini-pro-vision");
+			const imagesData = images.map((image) => ({
+				content: image,
+				type: "url",
+			})) as { content: string; type: "url" }[];
+	
+			const response = await model.generateContent([
+				{
+					content: prompt,
+					type: "text",
+				},
+				...imagesData,
+			]);
+
 			const jData = JSON.parse(response.replace(/[`]/g, ""));
 			const content = parse(responseSchema, jData);
 
@@ -73,7 +94,11 @@ export class SummarizeImagesContent {
 				content: content.images.filter((image) => image.subject === subject),
 			}));
 		} catch (error) {
-			console.error(error);
+			if(error instanceof ValiError) {
+				const flattenErrors = flatten<typeof responseSchema>(error);
+				console.error(flattenErrors);
+			}
+			
 			return [];
 		}
 	}

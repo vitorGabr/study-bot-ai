@@ -14,9 +14,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.8",
     "@google/generative-ai": "^0.8.0",
     "dayjs": "^1.11.10",
     "discord.js": "^14.14.1",
+    "sharp": "^0.33.3",
     "valibot": "^0.30.0"
   }
 }

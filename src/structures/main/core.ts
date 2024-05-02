@@ -34,7 +34,7 @@ export class Core extends Client {
 			cwd: "./src/events",
 		})) {
 			const { name, once, run }: EventType<keyof ClientEvents> = (
-				await import(`../events/${file}`)
+				await import(`../../events/${file}`)
 			).default;
 			try {
 				if (name) once ? this.once(name, run) : this.on(name, run);

@@ -1,4 +1,4 @@
-import { Event } from "../structures/event";
+import { Event } from "../structures/main/event";
 
 export default new Event({
     name:'ready',
