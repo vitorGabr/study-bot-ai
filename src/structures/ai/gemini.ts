@@ -4,6 +4,7 @@ import {
 } from "@google/generative-ai";
 import { type GenerativeIa, type ContentProps, type ModelsOptions, geminiModels } from "../../interfaces/generative-ia";
 import { parse } from "valibot";
+import { convertImageToBase64 } from "../../helpers/convert-image-to-base-64";
 
 export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 	readonly name = "Gemini";
@@ -28,7 +29,7 @@ export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 				if (type === "url") {
 					return {
 						inlineData: {
-							data: await this.urlToBase64(content),
+							data: await convertImageToBase64(content),
 							mimeType: "image/jpeg",
 						},
 					};
@@ -41,15 +42,5 @@ export class GeminiIa extends GoogleGenerativeAI implements GenerativeIa {
 		const result = await model.generateContent(content);
 		const response = await result.response;
 		return response.text();
-	}
-
-	private async urlToBase64(url: string) {
-		return fetch(url)
-			.then((response) => response.blob())
-			.then(async (blob) => {
-				const buf = await blob.arrayBuffer();
-				const base64 = Buffer.from(buf).toString("base64");
-				return base64;
-			});
 	}
 }

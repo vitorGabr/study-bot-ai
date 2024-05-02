@@ -1,7 +1,7 @@
-import sharp from "sharp";
 import { type GenerativeIa, type ContentProps, type ModelsOptions, anthropicModels } from "../../interfaces/generative-ia";
 import Anthropic from "@anthropic-ai/sdk";
 import {  parse } from "valibot";
+import { convertImageToBase64 } from "../../helpers/convert-image-to-base-64";
 
 export class AnthropicAI extends Anthropic implements GenerativeIa {
 	readonly name = "Anthropic Claude";
@@ -24,7 +24,7 @@ export class AnthropicAI extends Anthropic implements GenerativeIa {
 		const content = await Promise.all(
 			prompt.map(async ({ content, type }) => {
 				if (type === "url") {
-					const dataBase64 = await this.urlToBase64(content);
+					const dataBase64 = await convertImageToBase64(content);
 					return {
 						type: "image",
 						source: {
@@ -51,21 +51,4 @@ export class AnthropicAI extends Anthropic implements GenerativeIa {
 		return response.map((item) => item.text).join("\n");
 	}
 
-	private async urlToBase64(url: string) {
-		return fetch(url)
-			.then((response) => response.blob())
-			.then(async (blob) => {
-				const buf = await blob.arrayBuffer();
-				const nodeBuffer = Buffer.from(buf);
-				let bufferImgCompressed = await sharp(nodeBuffer)
-					.jpeg({ quality: 70 })
-					.resize({ width: 800, height: 800 })
-					.toBuffer()
-					.then(data => { return data; })
-					.catch(err => { console.log('Error on compress'); });
-
-				if (!bufferImgCompressed) return;
-				return bufferImgCompressed.toString('base64');
-			});
-	}
 }
