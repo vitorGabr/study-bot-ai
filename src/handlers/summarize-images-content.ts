@@ -17,11 +17,7 @@ export class SummarizeImagesContent {
 	constructor(private ia: GenerativeIa) {}
 
 	async execute(images: string[]) {
-		const weekDay = dayjs().subtract(1, "day").day();
-		const channels = CHANNELS.filter((channel) =>
-			channel.classDays?.includes(weekDay),
-		)
-			.map((channel) => channel.name)
+		const channels = CHANNELS.map((channel) => channel.name)
 			.join(", ");
 
 		const prompt = `

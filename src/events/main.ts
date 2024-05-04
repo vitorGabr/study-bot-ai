@@ -18,7 +18,6 @@ export default new Event({
 
 		const images = attachments.map((attachment) => attachment.url);
 		const contents = await new SummarizeImagesContent(ia).execute(images);
-
 		for (const item of contents) {
 			const { subject, content } = item;
 			const contentsText = content.map((c) => c.content)
@@ -47,9 +46,9 @@ export default new Event({
 					.setFooter({
 						text: `Gerado por ${ia.name}`,
 					});
-					let embed4 = new EmbedBuilder().setURL('https://astrixbot.cf').setImage('https://someimagelink.jpg')
+
 				await channel.send({
-					embeds: [embed,embed4],
+					embeds: [embed],
 					files: content.map((c) => c.image),
 				});
 			}
