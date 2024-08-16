@@ -13,10 +13,9 @@ export default new Event({
 		if (attachments.size <= 0 || author.bot) return;
 
 		await message.channel.sendTyping();
-
 		const imageUrls = attachments.map((attachment) => attachment.url);
 		const contents = await new ContentSummarizer().execute(imageUrls);
-		
+
 		for (const item of contents.subjects) {
 			const { subject, resume, images } = item;
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
