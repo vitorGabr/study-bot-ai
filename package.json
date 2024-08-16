@@ -7,18 +7,18 @@
     "start": "bun src/index.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.7.1",
+    "@biomejs/biome": "1.8.3",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.20.8",
-    "@google/generative-ai": "^0.8.0",
-    "dayjs": "^1.11.10",
-    "discord.js": "^14.14.1",
-    "sharp": "^0.33.3",
-    "valibot": "^0.30.0"
+    "@ai-sdk/google": "^0.0.38",
+    "@google/generative-ai": "^0.17.0",
+    "ai": "^3.3.8",
+    "dayjs": "^1.11.12",
+    "discord.js": "^14.15.3",
+    "zod": "^3.23.8"
   }
 }
