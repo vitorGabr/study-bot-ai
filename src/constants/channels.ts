@@ -2,39 +2,28 @@ type ChannelProps = {
 	id: string;
 	name: string;
 	tag: string;
-	classDays?: number[];
 };
 
 export const CHANNELS = [
 	{
-		name: "Linguagens Formais e Autômatos",
-		tag: "linguagens-formais-e-automatos",
-		classDays: [2],
+		name: "Cáuculo numérico computacional",	
+		tag: "calculo-numerico-computacional",
 	},
 	{
-		name: "Arquitetura de Computadores Modernos",
-		tag: "arquitetura-de-computadores-modernos",
-		classDays: [3],
+		name: "Aspectos Teóricos da Computação",
+		tag: "aspectos-teoricos-da-computacao",
 	},
 	{
-		name: "Sistemas Operacionais",
-		tag: "sistemas-operacionais",
-		classDays: [1],
+		name: "Sistemas Operacionais abertos e mobile",
+		tag: "sistemas-operacionais-abertos-e-mobile",
 	},
 	{
-		name: "Inteligência Artificial",
-		tag: "inteligencia-artificial",
-		classDays: [5],
+		name: "Gestão de Projetos",
+		tag: "gestao-de-projetos",
 	},
 	{
-		name: "Computação Gráfica",
-		tag: "computacao-grafica",
-		classDays: [5],
-	},
-	{
-		name: "Arquitetura de Redes de Computador",
-		tag: "arquitetura-de-redes-de-computador",
-		classDays: [3],
+		name: "Processamento de Imagens e visão computacional",
+		tag: "processamento-de-imagens-e-visao-computacional",
 	},
 	{
 		name: "Outros",

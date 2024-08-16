@@ -16,8 +16,15 @@ export default new Event({
 		const imageUrls = attachments.map((attachment) => attachment.url);
 		const contents = await new ContentSummarizer().execute(imageUrls);
 
+		if (!contents) {
+			await message.reply(ERRORS.NO_CONTENT_FOUND);
+			await message.delete();
+			return;
+		}
+
 		for (const item of contents.subjects) {
-			const { subject, resume, images } = item;
+			console.log(item)
+			const { subject, resume, imageIndexes } = item;
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
 			const channel = guild?.channels.cache.find(
 				(channel) => channel.name === channelInfo?.tag,
@@ -40,7 +47,7 @@ export default new Event({
 
 				await channel.send({
 					embeds: [embed],
-					files: images.map((index) => imageUrls[index]),
+					files: imageIndexes.map((index) => imageUrls[index]),
 				});
 			}
 		}
