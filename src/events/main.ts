@@ -16,7 +16,7 @@ export default new Event({
 
 		const imageUrls = attachments.map((attachment) => attachment.url);
 		const contents = await new ContentSummarizer().execute(imageUrls);
-		await message.reply(JSON.stringify(contents, null, 2));
+		
 		for (const item of contents.subjects) {
 			const { subject, resume, images } = item;
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
