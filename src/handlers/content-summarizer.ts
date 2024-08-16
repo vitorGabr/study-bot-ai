@@ -26,13 +26,20 @@ export class ContentSummarizer {
 							type: "text",
 							text: `
 								Objetivo: "
-                                    1. Dada a sequência de imagens organizar por index, (0,1,2)
-									2. Dada a uma sequência de imagens, agrupar por matéria e gerar um resumo detalhado para cada uma, 
+                                    1. Dada a sequência de imagens organizar por index, a quantidade máxima de index é extamente o tamanho da sequência de imagens. 
+									Qualquer valor fora do range (0 a ${images.length}) da sequência de imagens deve ser ignorado.
+							`
+						},
+						{
+							type: "text",
+							text: `
+								Objetivo: "
+									1. Dada a uma sequência de imagens, agrupar por matéria e gerar um resumo detalhado para cada uma, 
 										o objetivo é identificar o conteúdo passado em sala de aula de cada matéria.
 										O resumo deve ser bem organizado e detalhado, com informações relevantes que ajudem a entender o conteúdo.
 										Agrupar por cada matéria e resumo um array de imagens que representam o conteúdo com o index que foi gerado de cada imagem,
 										por exemplo, a matéria de matemática tem 3 imagens, então o index será (0,1,2) e assim por diante.
-									3. Caso o conteúdo não esteja presente em nenhuma matéria, ele deve ser incluido em Outros explicando detalhadamente sobre o assunto.
+									2. Caso o conteúdo não esteja presente em nenhuma matéria, ele deve ser incluido em Outros explicando detalhadamente sobre o assunto.
 								",
 								Observação: "
 									- O resumo deve ser bem detalhado e organizado, com informações relevantes que ajudem a entender o conteúdo.
@@ -44,12 +51,11 @@ export class ContentSummarizer {
 				},
 			],
 			schema: z.object({
-				imagesIndex: z.array(z.coerce.number()),
 				subjects: z.array(
 					z.object({
 						subject: z.string(),
 						resume: z.string(),
-						imagesIndex: z.array(z.coerce.number()),
+						images: z.array(z.coerce.number()),
 					}),
 				),
 			}),

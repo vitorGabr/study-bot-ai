@@ -5,7 +5,6 @@ import { ContentSummarizer } from "../handlers/content-summarizer";
 import dayjs from "dayjs";
 import { Event } from "../structures/main/event";
 
-
 export default new Event({
 	name: "messageCreate",
 	run: async (message) => {
@@ -13,11 +12,13 @@ export default new Event({
 
 		if (attachments.size <= 0 || author.bot) return;
 
-		const images = attachments.map((attachment) =>  attachment.url);
-		const contents = await new ContentSummarizer().execute(images);
+		await message.channel.sendTyping();
 
+		const imageUrls = attachments.map((attachment) => attachment.url);
+		const contents = await new ContentSummarizer().execute(imageUrls);
+		await message.reply(JSON.stringify(contents, null, 2));
 		for (const item of contents.subjects) {
-			const { subject,resume,imagesIndex } = item;
+			const { subject, resume, images } = item;
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
 			const channel = guild?.channels.cache.find(
 				(channel) => channel.name === channelInfo?.tag,
@@ -36,11 +37,11 @@ export default new Event({
 					.setTitle(`Aula gerada do dia ${date}`)
 					.setDescription(resume)
 					.setTimestamp()
-					.setColor('Random');
+					.setColor("Random");
 
 				await channel.send({
 					embeds: [embed],
-					files: imagesIndex.map((index) => images[index]),
+					files: images.map((index) => imageUrls[index]),
 				});
 			}
 		}
