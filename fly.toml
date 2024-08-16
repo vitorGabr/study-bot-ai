@@ -9,12 +9,16 @@ primary_region = 'gru'
 [build]
 
 [[services]]
-  internal_port = 3000
+  internal_port = 8888
   protocol = "tcp"
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
 
-  # Allow machines to run continuously
-  auto_start_machines = false
-  auto_stop_machines = false
+    [[services.ports]]
+      handlers = ["http"]
+      port = 80
+      force_https = false
 
 [[vm]]
   memory = '512mb'
