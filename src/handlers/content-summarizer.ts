@@ -10,7 +10,7 @@ export class ContentSummarizer {
 			type: "image",
 			image: new URL(image),
 		})) as { type: "image"; image: URL }[];
-
+		
 		const response = await generateObject({
 			model: google("models/gemini-1.5-pro-latest"),
 			messages: [
