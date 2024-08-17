@@ -1,102 +1,76 @@
-import { CHANNELS } from "../constants/channels";
 import { google } from "@ai-sdk/google";
 import { generateObject, JSONParseError, TypeValidationError } from "ai";
 import { z } from "zod";
 
 export class ContentSummarizer {
-	async execute(images: string[]) {
-		const channels = CHANNELS.map((channel) => channel.name).join(", ");
-		const imagesContent = images.map((image) => ({
-			type: "image",
-			image: new URL(image),
-		})) as { type: "image"; image: URL }[];
+  async execute(
+    images: { subject: string; resume: string }[]
+  ) {
+    try {
+      const response = await generateObject({
+        model: google("models/gemini-1.5-pro-latest"),
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: `
+					Contexto: Você é um assistente educacional especializado em resumir e organizar conteúdo de aulas. Sua tarefa é analisar imagens de aulas recentes e criar um resumo detalhado por matéria.
+					Dados de Entrada: 
+					${images
+					.map(({ subject, resume }, index) => `Imagem ${index + 1}: Matéria: ${subject}, Resumo: ${resume}`)
+					.join("\n")}
+					Objetivo: 
+						1. Agrupe as imagens por matéria.
+						2. Para cada matéria, crie um resumo detalhado e coerente do conteúdo da aula.
+						3. Organize as informações de forma lógica e fácil de entender.
 
-		try {
-			const response = await generateObject({
-				model: google("models/gemini-1.5-pro-latest"),
-				messages: [
+					Diretrizes:
+						1. Foque apenas nas matérias que podem ser identificadas com certeza a partir das imagens fornecidas.
+						2. Ignore imagens que não se encaixem claramente em uma matéria específica.
+						3. Evite repetições de matérias.
+						4. O resumo deve ser detalhado, mas conciso, destacando os pontos-chave da aula.
+						5. Use linguagem clara e apropriada para o nível educacional dos estudantes.
+						6. Se possível, inclua exemplos ou exercícios mencionados nas imagens.
+						7. Indique qualquer sequência lógica ou progressão do conteúdo, se aplicável.
+
+					Formato de Saída:
 					{
-						role: "user",
-						content: [
-							...imagesContent,
+						"subjects": [
 							{
-								type: "text",
-								text: `Dados: "As matérias disponíveis são: ${channels}."`,
+							"subject": "Nome da Matéria",
+							"resume": "Resumo detalhado da aula, incluindo tópicos principais, conceitos-chave e exemplos relevantes."
 							},
-							{
-								type: "text",
-								text: `
-									Objetivo:
-									1. Organize a sequência de imagens de acordo com seu índice. O índice máximo permitido é o tamanho total da sequência de imagens.
-									   Qualquer valor fora do intervalo (0 a ${images.length}) deve ser ignorado.
-								`,
-							},
-							{
-								type: "text",
-								text: `
-									Objetivo:
-									1. Agrupe as imagens por matéria e gere um resumo detalhado para cada grupo, focado em identificar o conteúdo abordado em sala de aula.
-									   O resumo deve incluir:
-										 - Tópicos principais abordados.
-										 - Exemplos ou detalhes específicos mostrados nas imagens.
-										 - Conexões entre os tópicos e as imagens.
-									   O resumo deve ser bem organizado e conter informações relevantes que ajudem a compreender o conteúdo.
-									   Para cada matéria identificada, inclua todos os índices das imagens relacionadas. 
-									   Essa etapa é crucial para garantir a precisão do resumo. Qualquer erro na associação de imagens invalidará todo o conteúdo,
-									   portanto, muita atenção é necessária.
-									2. Apenas as matérias listadas devem ser reconhecidas.
-									3. Os índices das imagens são baseados na sequência passada, começando do índice 0.
-									4. Não deve haver repetição de matérias. Se uma matéria, como matemática, já foi identificada, ela não deve aparecer novamente.
-									   Cada matéria deve ser única e as imagens associadas devem estar agrupadas no campo 'imageIndexes'.
-								`,
-							},
-							{
-								type: "text",
-								text: `
-									Observações:
-									- O resumo deve ser detalhado e organizado, com informações que facilitem a compreensão do conteúdo.
-									- Normalmente, o conteúdo é apresentado em uma sequência de imagens da aula do dia anterior.
-									- As matérias identificadas devem coincidir exatamente com as disponíveis e com o tema abordado nas imagens.
-									- Se houver incerteza sobre a matéria correspondente a uma imagem, essa imagem deve ser ignorada.
-									- Somente inclua no resumo matérias que possam ser identificadas com certeza a partir das imagens.
-								`,
-							},
-							{
-								type: "text",
-								text: `
-									Exemplo de Saída:
-									- Matéria: Matemática
-									  Resumo: "A aula cobriu os conceitos de álgebra, incluindo equações lineares e quadráticas. As imagens mostraram exemplos de problemas resolvidos em sala."
-									  Índices de Imagens: [0, 1, 2]
-									- Matéria: História
-									  Resumo: "A aula discutiu os principais eventos da Revolução Francesa, destacando as causas e consequências do movimento."
-									  Índices de Imagens: [3, 4, 5]
-								`,
-							},
-						],
-					},
-				],
-				schema: z.object({
-					subjects: z.array(
-						z.object({
-							subject: z.string(),
-							resume: z.string(),
-							imageIndexes: z.array(z.coerce.number()),
-						}),
-					),
-				}),
-			});
+							// Repita para cada matéria identificada
+						]
+					}
+					Por favor, processe as informações fornecidas e gere um resumo estruturado seguindo estas diretrizes.
+				`,
+              },
+            ],
+          },
+        ],
+        schema: z.object({
+          subjects: z.array(
+            z.object({
+              subject: z.string(),
+              resume: z.string(),
+            })
+          ),
+        }),
+      });
 
-			return response.object;
-		} catch (error) {
-			if (TypeValidationError.isInstance(error)) {
-				console.log({ type: "validation-error", value: error.value });
-			} else if (JSONParseError.isInstance(error)) {
-				console.log({ type: "parse-error", text: error.text });
-			} else {
-				console.log({ type: "unknown-error", error });
-			}
-			return null;
-		}
-	}
+      return response.object;
+    } catch (error) {
+      if (TypeValidationError.isInstance(error)) {
+        console.log({ type: "validation-error", value: error.value });
+      } else if (JSONParseError.isInstance(error)) {
+        console.log({ type: "parse-error", text: error.text });
+      } else {
+        console.log({ type: "unknown-error", error });
+      }
+      return null;
+    }
+  }
 }
