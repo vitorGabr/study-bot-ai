@@ -9,18 +9,23 @@ import { ClassifyContent } from "../handlers/classify-content";
 export default new Event({
 	name: "messageCreate",
 	run: async (message) => {
-		const { author, attachments, guild } = message;
-
-		if (attachments.size === 0 || author.bot) return;
-
+		const { author, attachments, guild, channel } = message;
+		if (
+			attachments.size === 0 ||
+			author.bot ||
+			("name" in channel && channel.name) !== "general"
+		) {
+			return;
+		}
+		
 		try {
 			await message.channel.sendTyping();
 
 			const imageUrls = Array.from(attachments.values()).map(
 				(attachment) => attachment.url,
 			);
-			const classifiedImages = await new ClassifyContent().execute(imageUrls);
 
+			const classifiedImages = await new ClassifyContent().execute(imageUrls);
 			if (!classifiedImages?.images.length) {
 				await message.reply(ERRORS.NO_CONTENT_FOUND);
 				return;
