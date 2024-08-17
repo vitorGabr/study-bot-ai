@@ -1,19 +1,20 @@
 import { Glob } from "bun";
 import {
 	Client,
-	IntentsBitField,
+	GatewayIntentBits,
 	Partials,
-	type BitFieldResolvable,
 	type ClientEvents,
-	type GatewayIntentsString,
 } from "discord.js";
 import type { EventType } from "./event";
 
 export class Core extends Client {
-
 	constructor() {
 		super({
-			intents: Object.keys(IntentsBitField.Flags) as BitFieldResolvable<GatewayIntentsString, number>,
+			intents: [
+				GatewayIntentBits.Guilds,
+				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.MessageContent,
+			],
 			partials: [
 				Partials.Message,
 				Partials.Channel,
@@ -34,7 +35,7 @@ export class Core extends Client {
 			cwd: "./src/events",
 		})) {
 			const { name, once, run }: EventType<keyof ClientEvents> = (
-				await import(`../../events/${file}`)
+				await import(`../events/${file}`)
 			).default;
 			try {
 				if (name) once ? this.once(name, run) : this.on(name, run);
@@ -42,6 +43,5 @@ export class Core extends Client {
 				console.error(error);
 			}
 		}
-
 	}
 }

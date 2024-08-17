@@ -1,12 +1,11 @@
 type ChannelProps = {
-	id: string;
 	name: string;
 	tag: string;
 };
 
 export const CHANNELS = [
 	{
-		name: "Cáuculo numérico computacional",	
+		name: "Cáuculo numérico computacional",
 		tag: "calculo-numerico-computacional",
 	},
 	{
@@ -28,5 +27,5 @@ export const CHANNELS = [
 	{
 		name: "Outros",
 		tag: "outros",
-	}
-] as ChannelProps[];
+	},
+] satisfies ChannelProps[];

@@ -3,7 +3,7 @@ import { CHANNELS } from "../constants/channels";
 import { ERRORS } from "../constants/errors";
 import { ContentSummarizer } from "../handlers/content-summarizer";
 import dayjs from "dayjs";
-import { Event } from "../structures/main/event";
+import { Event } from "../structures/event";
 
 export default new Event({
 	name: "messageCreate",
@@ -14,17 +14,13 @@ export default new Event({
 
 		await message.channel.sendTyping();
 		const imageUrls = attachments.map((attachment) => attachment.url);
-		const contents = await new ContentSummarizer().execute(imageUrls);
+		const content = await new ContentSummarizer().execute(imageUrls);
 
-		if (!contents) {
+		if (!content) {
 			await message.reply(ERRORS.NO_CONTENT_FOUND);
-			await message.delete();
-			return;
 		}
 
-		for (const item of contents.subjects) {
-			console.log(item)
-			const { subject, resume, imageIndexes } = item;
+		content?.subjects.forEach(async ({ subject, resume, imageIndexes }) => {
 			const channelInfo = CHANNELS.find((channel) => channel.name === subject);
 			const channel = guild?.channels.cache.find(
 				(channel) => channel.name === channelInfo?.tag,
@@ -33,7 +29,7 @@ export default new Event({
 				await message.reply(
 					`${ERRORS.CHANNEL_NOT_FOUND}, ${subject} não encontrado!`,
 				);
-				continue;
+				return;
 			}
 
 			if (channel?.type === ChannelType.GuildText) {
@@ -50,7 +46,8 @@ export default new Event({
 					files: imageIndexes.map((index) => imageUrls[index]),
 				});
 			}
-		}
+		});
+
 
 		await message.delete();
 	},

@@ -1,4 +1,4 @@
-import { Core } from "./structures/main/core";
+import { Core } from "./structures/core";
 
 const client = new Core();
 client.start();
