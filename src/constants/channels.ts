@@ -5,8 +5,8 @@ type ChannelProps = {
 
 export const CHANNELS = [
 	{
-		name: "Cáuculo numérico computacional",
-		tag: "calculo-numerico-computacional",
+		name: "Cáuculo numérico",
+		tag: "calculo-numerico",
 	},
 	{
 		name: "Aspectos Teóricos da Computação",
@@ -21,8 +21,8 @@ export const CHANNELS = [
 		tag: "gestao-de-projetos",
 	},
 	{
-		name: "Processamento de Imagens e visão computacional",
-		tag: "processamento-de-imagens-e-visao-computacional",
+		name: "Processamento de Imagens",
+		tag: "processamento-de-imagens",
 	},
 	{
 		name: "Outros",

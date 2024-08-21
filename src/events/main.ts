@@ -12,8 +12,7 @@ export default new Event({
 		const { author, attachments, guild, channel } = message;
 		if (
 			attachments.size === 0 ||
-			author.bot ||
-			("name" in channel && channel.name) !== "general"
+			author.bot
 		) {
 			return;
 		}
