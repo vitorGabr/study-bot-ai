@@ -1,22 +1,20 @@
+import { JSONParseError, TypeValidationError } from "ai";
+import dayjs from "dayjs";
 import { ChannelType, EmbedBuilder } from "discord.js";
 import { CHANNELS } from "../constants/channels";
 import { ERRORS } from "../constants/errors";
-import { ContentSummarizer } from "../handlers/content-summarizer";
-import dayjs from "dayjs";
-import { Event } from "../structures/event";
 import { ClassifyContent } from "../handlers/classify-content";
+import { ContentSummarizer } from "../handlers/content-summarizer";
+import { Event } from "../structures/event";
 
 export default new Event({
 	name: "messageCreate",
 	run: async (message) => {
-		const { author, attachments, guild, channel } = message;
-		if (
-			attachments.size === 0 ||
-			author.bot
-		) {
+		const { author, attachments, guild } = message;
+		if (attachments.size === 0 || author.bot) {
 			return;
 		}
-		
+
 		try {
 			await message.channel.sendTyping();
 
@@ -80,8 +78,15 @@ export default new Event({
 
 			await message.delete();
 		} catch (error) {
-			console.error("Erro ao processar mensagem:", error);
-			await message.reply("ERROR");
+			let errorMessage = "";
+			if (TypeValidationError.isInstance(error)) {
+				errorMessage = `Erro de validação: ${error.message}`;
+			} else if (JSONParseError.isInstance(error)) {
+				errorMessage = `Erro ao processar JSON: ${error.text}`;
+			} else {
+				errorMessage = `Erro desconhecido: ${error}`;
+			}
+			await message.reply(errorMessage);
 		}
 	},
 });

@@ -1,9 +1,9 @@
 import { Glob } from "bun";
 import {
 	Client,
+	type ClientEvents,
 	GatewayIntentBits,
 	Partials,
-	type ClientEvents,
 } from "discord.js";
 import type { EventType } from "./event";
 
