@@ -41,8 +41,13 @@ export default new Event({
 
 			for (const { subject, resume } of content.subjects) {
 				const groupImages = classifiedImages.images
+					.map((item, index) => {
+						return {
+							subject: item.subject,
+							image: imageUrls[index],
+						}
+					})
 					.filter((item) => item.subject === subject)
-					.map((_, index) => imageUrls[index])
 					.filter(Boolean);
 
 				const channelInfo = CHANNELS.find(
@@ -72,7 +77,7 @@ export default new Event({
 
 				await channel.send({
 					embeds: [embed],
-					files: groupImages,
+					files: groupImages.map((item) => item.image),
 				});
 			}
 
