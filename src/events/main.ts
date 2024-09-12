@@ -45,7 +45,7 @@ export default new Event({
 						return {
 							subject: item.subject,
 							image: imageUrls[index],
-						}
+						};
 					})
 					.filter((item) => item.subject === subject)
 					.filter(Boolean);
